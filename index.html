@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <div id = "Lesson">
+        <h1>{{ lesson }}</h1>
+    </div>
+    <script type = "module">
+        const {createApp} = Vue
+        const myApp = createApp({
+            data(){
+                return{
+                    lesson: 'Computer Science!!!',
+                    location: 'Hendon',
+                    Price: '12.5',
+                    image: 'images/computerscience.jpg'
+
+                }
+            }
+        })
+        myApp.mount('#Lesson')
+    </script>
+
+</body>
+</html>
