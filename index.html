@@ -3,28 +3,49 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Hendon Classes</title>
 </head>
 <body>
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
     <div id = "Lesson">
-        <h1>{{ lesson }}</h1>
+        <h1 id = "title">Lesson</h1>
+        <p v-text = Compsci.lesson></p>
+        <p v-text = Compsci.location></p>
+        <p v-text = Compsci.Price></p>
+        <p v-text = Compsci.Description></p>
+        <img v-bind:src = Compsci.image width = 300>
+        <button v-on:click = "buttonmessage()">See more</button>
+
+
     </div>
     <script type = "module">
         const {createApp} = Vue
         const myApp = createApp({
             data(){
                 return{
+                   Compsci:{
+
                     lesson: 'Computer Science!!!',
                     location: 'Hendon',
-                    Price: '12.5',
-                    image: 'images/computerscience.jpg'
+                    Price: 12.5,
+                    Description: 'One to one computer science lessons with expert leading tutors. Active recall methods and hands on practical work in leading technology and software. ',
+                    image: 'images/computerscience.avif'
 
+                   } 
+                     
                 }
-            }
+                
+            },
+            methods:{
+                    buttonmessage(){
+                        this.buttontext = "button clicked"
+                    }
+                }
         })
         myApp.mount('#Lesson')
     </script>
-
+<style>
+    .title {color: aqua,;font-size: 200%;}
+</style>
 </body>
 </html>
