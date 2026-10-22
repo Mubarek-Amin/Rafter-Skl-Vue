@@ -7,40 +7,36 @@
 </head>
 <body>
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
-    <div id = "Lesson">
+    <div id="Lesson">
         <h1 id = "title">Lesson</h1>
-        <p v-text = Compsci.lesson></p>
-        <p v-text = Compsci.location></p>
-        <p v-text = Compsci.Price></p>
-        <p v-text = Compsci.Description></p>
-        <img v-bind:src = Compsci.image width = 300>
-        <button v-on:click = "buttonmessage()">See more</button>
+        <div v-for="lesson in lessons" :key="lesson._id">
+        <h2>{{ lesson.topic }}</h2>
+        <p>Location: {{ lesson.location }}</p>
+        <p>Price: £{{ lesson.price }}</p>
+        <p>Spaces: {{ lesson.space }}</p>
+        </div>
+        </div>
 
-
-    </div>
     <script type = "module">
         const {createApp} = Vue
         const myApp = createApp({
             data(){
                 return{
-                   Compsci:{
+                   lessons: []
 
-                    lesson: 'Computer Science!!!',
-                    location: 'Hendon',
-                    Price: 12.5,
-                    Description: 'One to one computer science lessons with expert leading tutors. Active recall methods and hands on practical work in leading technology and software. ',
-                    image: 'images/computerscience.avif'
-
-                   } 
+                  
                      
                 }
                 
             },
-            methods:{
-                    buttonmessage(){
-                        this.buttontext = "button clicked"
-                    }
-                }
+            created(){
+                fetch('https://m01005054-rafter-skl.onrender.com/lessons')
+                .then(response=> response.json())
+                .then(data=> {
+                    this.lessons = data;
+                });
+            }
+          
         })
         myApp.mount('#Lesson')
     </script>
