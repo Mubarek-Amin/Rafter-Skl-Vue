@@ -5,12 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hendon Classes</title>
 </head>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 <body>
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
     <div id="Lesson">
         <h1 id = "title">Lesson</h1>
         <div v-for="lesson in lessons" :key="lesson._id">
         <h2>{{ lesson.topic }}</h2>
+        <p>Items in Cart: {{ cart.length }}</p>
+        <button v-on:click="addToCart(lessons)" :disabled="lesson.space === 0">Add to cart</button>
         <p>Location: {{ lesson.location }}</p>
         <p>Price: £{{ lesson.price }}</p>
         <p>Spaces: {{ lesson.space }}</p>
@@ -22,12 +25,21 @@
         const myApp = createApp({
             data(){
                 return{
-                   lessons: []
+                   lessons: [],
+                   cart:[]
 
                   
                      
                 }
                 
+            },
+            methods:{
+                addToCart(lesson){
+                    if (lesson.space > 0){
+                        this.cart.push(lesson)
+                    }
+                }
+
             },
             created(){
                 fetch('https://m01005054-rafter-skl.onrender.com/lessons')
@@ -36,6 +48,7 @@
                     this.lessons = data;
                 });
             }
+
           
         })
         myApp.mount('#Lesson')
