@@ -13,7 +13,7 @@
         <div v-for="lesson in lessons" :key="lesson._id">
         <h2>{{ lesson.topic }}</h2>
         <p>Items in Cart: {{ cart.length }}</p>
-        <button v-on:click="addToCart(lessons)" :disabled="lesson.space === 0">Add to cart</button>
+        <button v-on:click="addToCart(lesson)" :disabled="lesson.space === 0">Add to cart</button>
         <p>Location: {{ lesson.location }}</p>
         <p>Price: £{{ lesson.price }}</p>
         <p>Spaces: {{ lesson.space }}</p>
