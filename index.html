@@ -4,13 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hendon Classes</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 </head>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 <body>
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
     <div id="Lesson">
         <h1 id = "title">Lesson</h1>
         <div v-for="lesson in lessons" :key="lesson._id">
+        <i class = "fa-solid fa-book-open fa-2x"></i>
         <h2>{{ lesson.topic }}</h2>
         <p>Items in Cart: {{ cart.length }}</p>
         <button v-on:click="addToCart(lesson)" :disabled="lesson.space === 0">Add to cart</button>
@@ -36,7 +37,8 @@
             methods:{
                 addToCart(lesson){
                     if (lesson.space > 0){
-                        this.cart.push(lesson)
+                        this.cart.push(lesson);
+                        lesson.space--
                     }
                 }
 
