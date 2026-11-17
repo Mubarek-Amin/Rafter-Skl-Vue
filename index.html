@@ -17,7 +17,23 @@
         </button>
 
         <div v-if="!showCart">
-            <div v-for="lesson in lessons" :key="lesson._id">
+            <label>Sort by:
+                <select v-model="sortBy">
+                    <option value = "topic">Subject</option>
+                    <option value = "location">Location</option>
+                    <option value = "price">Price</option>
+                    <option value = "space">Spaces</option>
+                    
+                </select>
+            </label>
+            <label>Order:
+                <select v-model="sortOrder">
+                    <option value = "ascending">Ascending</option>
+                    <option value = "descending">Descending</option>
+                </select>
+            </label>
+
+            <div v-for="lesson in sortedLessons" :key="lesson._id">
                 <i class="fa-solid fa-book-open fa-2x"></i>
                 <h2>{{ lesson.topic }}</h2>
                 <p>Location: {{lesson.location}}</p>
@@ -43,7 +59,9 @@
                 return{
                    lessons: [],
                    cart:[],
-                   showCart: false
+                   showCart: false,
+                   sortBy: 'topic',
+                   sortOrder: 'ascending'
 
                   
                      
@@ -69,6 +87,18 @@
                         this.showCart = false;
                     }
 
+                }
+
+            },
+            computed: {
+                sortedLessons(){
+                    return [... this.lessons].sort((a,b)=>{
+                        let result = 0;
+                        if (a[this.sortBy]> b[this.sortBy]) result = 1;
+                        if (a[this.sortBy]< b[this.sortBy]) result = -1;
+                        return this.sortOrder === 'ascending' ? result : -result;
+
+                    });
                 }
 
             },
