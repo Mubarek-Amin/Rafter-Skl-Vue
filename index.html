@@ -15,6 +15,7 @@
         <button v-on:click="toggleCart" :disabled="cart.length === 0">
             <i class = "fa-solid fa-cart-shopping"></i> Cart ({{ cart.length }})
         </button>
+        <p v-if ="orderMessage">{{ orderMessage }}</p>
 
         <div v-if="!showCart">
             <label>Sort by:
@@ -46,6 +47,12 @@
             <h2>Your cart</h2>
             <div v-for="(item,index) in cart" :key="index">
                 <p> {{item.topic }} - {{item.location}} - £{{item.price}}</p>
+                <h3>Checkout</h3>
+                <input v-model="name" placeholder="Name">
+                <span v-if="name && !isNameValid">Please enter a valid name</span>
+                <input v-model="phone" placeholder="Phone">
+                <span v-if="phone && !isPhoneValid">Must be 11 digits</span>
+                <button v-on:click="checkout" :disabled="!canCheckOut">Checkout</button>
                 <button v-on:click="removeFromCart(index)">Remove</button>
             </div>
         </div>
@@ -61,7 +68,10 @@
                    cart:[],
                    showCart: false,
                    sortBy: 'topic',
-                   sortOrder: 'ascending'
+                   sortOrder: 'ascending',
+                   name: '',
+                   phone: '',
+                   orderMessage: ''
 
                   
                      
@@ -87,6 +97,13 @@
                         this.showCart = false;
                     }
 
+                },
+                checkout(){
+                    this.orderMessage = `Thank you ${this.name}, your order has been filled`;
+                    this.cart = [];
+                    this.name = '';
+                    this.phone = '';
+                    this.showCart = false;
                 }
 
             },
@@ -99,6 +116,15 @@
                         return this.sortOrder === 'ascending' ? result : -result;
 
                     });
+                },
+                isNameValid(){
+                    return /^[A-Za-z ]+$/.test(this.name);
+                },
+                isPhoneValid(){
+                    return /^[0-9]{11}$/.test(this.phone);
+                },
+                canCheckOut(){
+                    return this.isNameValid && this.isPhoneValid;
                 }
 
             },
