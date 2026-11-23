@@ -99,11 +99,41 @@
 
                 },
                 checkout(){
-                    this.orderMessage = `Thank you ${this.name}, your order has been filled`;
-                    this.cart = [];
-                    this.name = '';
-                    this.phone = '';
-                    this.showCart = false;
+                    const counts = {};
+                    this.cart.forEach(lesson => {
+                        counts[lesson._id] = (counts[lesson._id] || 0) + 1;
+                        
+                    });
+                    const order = {
+                        name: this.name,
+                        phone: this.phone,
+                        lessonIDs: Object.keys(counts),
+                        lessons: Object.keys(counts).map(id => ({lessonID: id, spaces: counts[id]}))
+                    };
+                    fetch('https://m01005054-rafter-skl.onrender.com/orders',{
+                        method: 'POST',
+                        headers: {'Content-Type': 'application/json'},
+                        body: JSON.stringify(order)
+
+                    })
+                    .then(response => response.json())
+                    .then(() => {
+                        const uniqueLessons = [...new Set(this.cart)];
+                        const updates = uniqueLessons.map(lesson => fetch('https://m01005054-rafter-skl.onrender.com/lessons/' + lesson._id, {
+                            method: 'PUT',
+                            headers: {'Content-Type': 'application/json'},
+                            body: JSON.stringify({space: lesson.space})
+                        }));
+                        return Promise.all(updates);
+                    })
+                    .then(() =>{
+                        this.orderMessage = `Thank you for your order, ${this.name}!!!`;
+                        this.cart = [];
+                        this.name = '';
+                        this.phone = '';
+                        this.showCart = false
+                    });
+                    
                 }
 
             },
