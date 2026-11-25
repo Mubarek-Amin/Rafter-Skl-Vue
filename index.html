@@ -108,7 +108,7 @@
                         name: this.name,
                         phone: this.phone,
                         lessonIDs: Object.keys(counts),
-                        lessons: Object.keys(counts).map(id => ({lessonID: id, spaces: counts[id]}))
+                        lessons: Object.keys(counts).map(id => ({lessonId: id, spaces: counts[id]}))
                     };
                     fetch('https://m01005054-rafter-skl.onrender.com/orders',{
                         method: 'POST',
