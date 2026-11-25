@@ -47,14 +47,14 @@
             <h2>Your cart</h2>
             <div v-for="(item,index) in cart" :key="index">
                 <p> {{item.topic }} - {{item.location}} - £{{item.price}}</p>
-                <h3>Checkout</h3>
+                <button v-on:click="removeFromCart(index)">Remove</button>
+            </div>
+            <h3>Checkout</h3>
                 <input v-model="name" placeholder="Name">
                 <span v-if="name && !isNameValid">Please enter a valid name</span>
                 <input v-model="phone" placeholder="Phone">
                 <span v-if="phone && !isPhoneValid">Must be 11 digits</span>
                 <button v-on:click="checkout" :disabled="!canCheckOut">Checkout</button>
-                <button v-on:click="removeFromCart(index)">Remove</button>
-            </div>
         </div>
     
         </div>
