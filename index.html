@@ -27,6 +27,7 @@
                     
                 </select>
             </label>
+            <input v-model="searchQuery" placeholder="Search lessons...">
             <label>Order:
                 <select v-model="sortOrder">
                     <option value = "ascending">Ascending</option>
@@ -34,7 +35,7 @@
                 </select>
             </label>
 
-            <div v-for="lesson in sortedLessons" :key="lesson._id">
+            <div v-for="lesson in displayedLessons" :key="lesson._id">
                 <i class="fa-solid fa-book-open fa-2x"></i>
                 <h2>{{ lesson.topic }}</h2>
                 <p>Location: {{lesson.location}}</p>
@@ -61,6 +62,7 @@
 
     <script type = "module">
         const {createApp} = Vue
+        const API = 'https://m01005054-rafter-skl.onrender.com'
         const myApp = createApp({
             data(){
                 return{
@@ -71,7 +73,9 @@
                    sortOrder: 'ascending',
                    name: '',
                    phone: '',
-                   orderMessage: ''
+                   orderMessage: '',
+                   searchQuery: '',
+                   searchIds: null
 
                   
                      
@@ -155,7 +159,28 @@
                 },
                 canCheckOut(){
                     return this.isNameValid && this.isPhoneValid;
+                },
+                displayedLessons(){
+                    return this.sortedLessons.filter(lesson => 
+                        this.searchIds === null || this.searchIds.includes(lesson._id)
+                    );
+
                 }
+
+            },
+            watch:{
+                searchQuery(newQuery){
+                    if (newQuery.trim() === ''){
+                        this.searchIds = null;
+                        return;
+                    }
+                    fetch(API + '/search?q=' + encodeURIComponent(newQuery))
+                    .then(response => response.json())
+                    .then(results => {
+                        this.searchIds = results.map(lesson => lesson._id);
+                    });
+                }
+
 
             },
             created(){
