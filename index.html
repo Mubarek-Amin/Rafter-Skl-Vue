@@ -28,6 +28,14 @@
                 </select>
             </label>
             <input v-model="searchQuery" placeholder="Search lessons...">
+            <label>Teacher:
+                <select v-model="selectedTeacher">
+                    <option value="">All Teachers</option>
+                    <option v-for="teacher in teachers" :key="teacher._id" :value="teacher._id">
+                        {{teacher.firstName}} {{teacher.lastName}}
+                    </option>
+                </select>
+            </label>
             <label>Order:
                 <select v-model="sortOrder">
                     <option value = "ascending">Ascending</option>
@@ -75,7 +83,10 @@
                    phone: '',
                    orderMessage: '',
                    searchQuery: '',
-                   searchIds: null
+                   searchIds: null,
+                   teachers: [],
+                   selectedTeacher: '',
+                   teacherIds:  null
 
                   
                      
@@ -114,7 +125,7 @@
                         lessonIDs: Object.keys(counts),
                         lessons: Object.keys(counts).map(id => ({lessonId: id, spaces: counts[id]}))
                     };
-                    fetch('https://m01005054-rafter-skl.onrender.com/orders',{
+                    fetch(API + '/orders',{
                         method: 'POST',
                         headers: {'Content-Type': 'application/json'},
                         body: JSON.stringify(order)
@@ -123,7 +134,7 @@
                     .then(response => response.json())
                     .then(() => {
                         const uniqueLessons = [...new Set(this.cart)];
-                        const updates = uniqueLessons.map(lesson => fetch('https://m01005054-rafter-skl.onrender.com/lessons/' + lesson._id, {
+                        const updates = uniqueLessons.map(lesson => fetch(API +'/lessons/' + lesson._id, {
                             method: 'PUT',
                             headers: {'Content-Type': 'application/json'},
                             body: JSON.stringify({space: lesson.space})
@@ -162,8 +173,9 @@
                 },
                 displayedLessons(){
                     return this.sortedLessons.filter(lesson => 
-                        this.searchIds === null || this.searchIds.includes(lesson._id)
-                    );
+                    (this.searchIds === null || this.searchIds.includes(lesson._id)) &&
+                    (this.teacherIds === null || this.teacherIds.includes(lesson._id))
+                );
 
                 }
 
@@ -179,15 +191,32 @@
                     .then(results => {
                         this.searchIds = results.map(lesson => lesson._id);
                     });
+                },
+                selectedTeacher(newId){
+                    if (newId === ''){
+                        this.teacherIds = null;
+                        return;
+                    }
+                    fetch(API + '/teachers/' + newId + '/lessons')
+                    .then(response => response.json())
+                    .then(results => {
+                        this.teacherIds = results.map(lesson => lesson._id);
+                    });
                 }
+
 
 
             },
             created(){
-                fetch('https://m01005054-rafter-skl.onrender.com/lessons')
+                fetch(API + '/lessons')
                 .then(response=> response.json())
                 .then(data=> {
                     this.lessons = data;
+                });
+                fetch(API + '/teachers')
+                .then(response => response.json())
+                .then(data => {
+                    this.teachers = data
                 });
             }
 
