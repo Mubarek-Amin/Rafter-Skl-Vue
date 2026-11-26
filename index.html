@@ -3,14 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hendon Classes</title>
-    <!---->
+    <title>Rafter Skl</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <style>
+        :root { --main: #7b3fe4; --bg: #f5f3fa; }
+        body { font-family: system-ui, sans-serif; background: var(--bg); margin: 0; padding: 24px; color: #222; }
+        #title { color: var(--main); margin-top: 0; }
+        .toolbar { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; margin: 16px 0; }
+        input, select { padding: 8px 10px; border: 1px solid #ccc; border-radius: 8px; font: inherit; }
+        button { background: var(--main); color: white; border: none; padding: 8px 14px; border-radius: 8px; cursor: pointer; font: inherit; }
+        button:disabled { background: #bbb; cursor: not-allowed; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 16px; }
+        .card { background: white; border-radius: 12px; padding: 16px; box-shadow: 0 2px 8px rgba(0,0,0,.08); text-align: center; }
+        .card img { width: 80px; height: 80px; }
+        .card p { margin: 4px 0; }
+        span { color: #c62828; font-size: 0.9em; }
+</style>
 </head>
 <body>
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
     <div id="Lesson">
-        <h1 id = "title">Lesson</h1>
+        <h1 id = "title">Rafter skl lessons</h1>
 
         <button v-on:click="toggleCart" :disabled="cart.length === 0">
             <i class = "fa-solid fa-cart-shopping"></i> Cart ({{ cart.length }})
@@ -18,6 +31,7 @@
         <p v-if ="orderMessage">{{ orderMessage }}</p>
 
         <div v-if="!showCart">
+          <div class="toolbar">
             <label>Sort by:
                 <select v-model="sortBy">
                     <option value = "topic">Subject</option>
@@ -42,14 +56,17 @@
                     <option value = "descending">Descending</option>
                 </select>
             </label>
+            </div>
 
-            <div v-for="lesson in displayedLessons" :key="lesson._id">
-                <i class="fa-solid fa-book-open fa-2x"></i>
+            <div class="grid">
+            <div class ="card" v-for="lesson in displayedLessons" :key="lesson._id">
+                <img :src="api + '/images/' + lesson.image" :alt="lesson.topic">
                 <h2>{{ lesson.topic }}</h2>
                 <p>Location: {{lesson.location}}</p>
-                <p>Price: {{lesson.price}}</p>
+                <p>Price: £{{lesson.price}}</p>
                 <p>Spaces: {{lesson.space}}</p>
                 <button v-on:click="addToCart(lesson)" :disabled="lesson.space === 0">Add to cart</button>
+            </div>
             </div>
         </div>
         <div v-else>
@@ -86,7 +103,8 @@
                    searchIds: null,
                    teachers: [],
                    selectedTeacher: '',
-                   teacherIds:  null
+                   teacherIds:  null,
+                   api: API
 
                   
                      
@@ -224,8 +242,6 @@
         })
         myApp.mount('#Lesson')
     </script>
-<style>
-    .title {color: aqua,;font-size: 200%;}
-</style>
+
 </body>
 </html>
